@@ -2,17 +2,17 @@ namespace Moo_Pong
 {
     public partial class Form1 : Form
     {
-        int ballXspeed = 4;
-        int ballYspeed = 5;
-        int speed = 2;
+        int ballXspeed = 10; // CONTROLS the speed of ball on X axis / up and down / originally 4
+        int ballYspeed = 10; // originally 5
+        int speed = 8; // originally 2
         Random rand = new Random();
         bool goDown, goUp;
-        int computer_speed_change = 50;
+        int computer_speed_change = 4000; // Not certain what this does. originally 50. Changing to 400 does not seem to do much
         int playerScore = 0;
         int computerScore = 0;
-        int playerSpeed = 8;
-        int[] i = { 5, 6, 8, 9 }; // Will be the computer speed in conjunction with the above rand commant
-        int[] j = { 10, 9, 8, 11, 12 }; // used to assign different speed to ball x or ball y
+        int playerSpeed = 14; // THIS CONTROLS THE SPEED of my paddle. Originally 8.  
+        int[] i = { 5, 6, 8, 9 }; // Will be the computer speed in conjunction with the above rand commant (originaly 5, 6, 8, 9)
+        int[] j = { 10, 9, 8, 11, 12 }; // used to assign different speed to ball x or ball y (orignally 10, 9, 8, 11, 12)
 
         // LOOK INTO WHAT CODE HE IS DOING THAT IS PRESENTING THE SCORE AT THE TOP 
 
@@ -24,10 +24,20 @@ namespace Moo_Pong
 
         private void GameTimerEvent(object sender, EventArgs e)
         {
-            picBall.Top -= ballYspeed; // need to figure out why he is able to put a negative first. Do I have it wrong in my head that this is a issue?
+            picBall.Top -= ballYspeed; 
+            /*
+             * "Top" has nothing to do with the "top" of the form. Instead "top" **specifies the distance, in pixels, between the top edge of the form
+             * and the control** which in this case is the ball
+             * The above "reduces the "top" value of the picBall by the amount stored in ballySpeed
+             * So picture a ruler between the box and the top and the space in the ruler is constantly changing that determines the space
+             * between the top of the box and the top of the form.
+             * it specifies the distance this "gap" should close by 
+             * "top" is a value in pixels, and we SUBTRACT from this value the current value of ballYspeed.
+             * The above "moves" the ball up by decreasing the "top" value by ballYspeed
+             */
             picBall.Left -= ballXspeed;// 12:23
 
-            this.Text = "Player Score: " + playerScore + " -- Computer Score:  " + computerScore;
+            this.Text = "Player Score: " + playerScore + " -- Computer Score:  " + computerScore; // NEED TO FIGURE THIS OUT = PERPETUAL UPDATE? WHAT IS DOING IT?
 
             if (picBall.Top < 0 || picBall.Bottom > this.ClientSize.Height) // If the ball has reached the bottom or top of the screen. Figure this out
             { 
@@ -35,7 +45,7 @@ namespace Moo_Pong
             }
             if (picBall.Left < -2) // means has reached the border
             {
-                picBall.Left = 300;
+                picBall.Left = 300; // What does 300 do? 
                 ballXspeed = -ballXspeed; // no idea what this is. Find out
                 computerScore++; // clearly incrementing computer score = something here must be the computer "winning"
             }
@@ -61,31 +71,36 @@ namespace Moo_Pong
             {
                 picComputer.Top += speed;
             }
-            computer_speed_change -= 1;
+            
+            computer_speed_change -= 1; // What is this and why is it here? INCORRECT SPOT?
+
             if (computer_speed_change < 0)
             {
                 speed = i[rand.Next(i.Length)]; // FIGURE THIS OUT
                 computer_speed_change = 50;
             }
+            
             if (goDown && picPlayer.Top + picPlayer.Height < this.ClientSize.Height)
             {
                 picPlayer.Top += playerSpeed; 
             }
+            
             if (goUp && picPlayer.Top > 0)
             {
                 picPlayer.Top -= playerSpeed;
             }
+            
             CheckCollision(picBall, picPlayer, picPlayer.Right + 5); // FIND OUT IF THIS IS A PREDEFINED TERM (also what is the proper term for predefined?)
             CheckCollision(picBall, picComputer, picComputer.Left - 35);
-            if (computerScore > 5)
+            
+            if (computerScore > 2)
             {
                 GameOver("Sorry you lost the game"); // Look into the GameOver Method below
             }
-            else if (playerScore > 5)
+            else if (playerScore > 2)
             {
                 GameOver("You won this game");
             }            
-            
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -139,9 +154,6 @@ namespace Moo_Pong
                     ballYspeed = y;
                 }
             }
-
-
-        
         }
         private void GameOver(string message)
         { 
@@ -153,7 +165,5 @@ namespace Moo_Pong
             computer_speed_change = 50;
             gameTimer.Start();
         }
-
-
     }
 }
