@@ -37,9 +37,28 @@ namespace Moo_Pong
              */
             picBall.Left -= ballXspeed;// 12:23
 
-            this.Text = "Player Score: " + playerScore + " -- Computer Score:  " + computerScore; // NEED TO FIGURE THIS OUT = PERPETUAL UPDATE? WHAT IS DOING IT?
+            this.Text = "Player Score: " + playerScore + " -- Computer Score:  " + computerScore; 
+            // fascinatiung code. Grok notes that "this.Text" is permanently wired to the windows forms text 
+            // The above gives a perpetual update triggered by an event handler
 
-            if (picBall.Top < 0 || picBall.Bottom > this.ClientSize.Height) // If the ball has reached the bottom or top of the screen. Figure this out
+
+            if (picBall.Top < 0 || picBall.Bottom > this.ClientSize.Height) // CODE FOR IF THE BALL HITS THE TOP OR BOTTOM OF THE SCREEN
+                /* 
+                 * Note the score incremementer below = if the ball hits the top of bottom someone is going to score a point
+                 * picBall.Top < 0 means the following:
+                 *          if the number of pixels between the top of the pibBall object and the top of the screen 
+                 *          is less than zero it means the ball is out of bounds (still there but player cannot see it)
+                 * picBall.Bottom > this.ClientSize.Height means the following:
+                 *      this.ClientSize.Height refers to:
+                 *      This: the form
+                 *      ClientSize: Current size of form not including borders - basically the "useable area"
+                 *      Height is the assignment of whatever the above size is
+                 *      One IMPORTANT THING: Windows Forms coordinates work such that the top left of a box is the zero point. So the y Axis 
+                 *      can only ever move downwards and we show this as a positive number 
+                 *      This is why we CANNOT use a similar statement for the bottom as the top as the Y
+                 *      value of the bottom will continue to increase and will never be less than 0
+                 *     
+                 */
             { 
                 ballYspeed = -ballYspeed;
             }
@@ -93,11 +112,11 @@ namespace Moo_Pong
             CheckCollision(picBall, picPlayer, picPlayer.Right + 5); // FIND OUT IF THIS IS A PREDEFINED TERM (also what is the proper term for predefined?)
             CheckCollision(picBall, picComputer, picComputer.Left - 35);
             
-            if (computerScore > 2)
+            if (computerScore > 200)
             {
-                GameOver("Sorry you lost the game"); // Look into the GameOver Method below
+                GameOver("Sorry you lost the game"); // Look into the GameOver Method below BECAUES THIS APPENDS THINGS ON TO IT!
             }
-            else if (playerScore > 2)
+            else if (playerScore > 200)
             {
                 GameOver("You won this game");
             }            
